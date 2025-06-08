@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cénaclières</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 20px;
+        background: white;
+        font-family: "Fira Mono", monospace;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .center {
+        margin-bottom: 30px;
+      }
+
+      .center img {
+        width: 200px;
+        height: auto;
+      }
+
+      .list {
+        text-align: center;
+        font-size: 7px;
+        max-width: 90%;
+        line-height: 1.6;
+      }
+
+      .cursor {
+        display: inline-block;
+        width: 6px;
+        height: 1em;
+        background-color: black;
+        animation: blink 1s infinite;
+        margin-left: 2px;
+      }
+
+      @keyframes blink {
+        0%,
+        50% {
+          opacity: 1;
+        }
+        51%,
+        100% {
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="center">
+      <img src="https://i.imgur.com/Fq5SRMY.gif" alt="GIF centré" />
+    </div>
+
+    <div class="list" id="list"></div>
+
+    <script>
+      const lignes = [
+        [
+          ["1814, ", false],
+          ["Les Belles équipées", true],
+          [", Septimea Calendula", false],
+        ],
+        [
+          ["1823, ", false],
+          ["La Marieuse", true],
+          [", Célestine Vogue", false],
+        ],
+        [
+          ["1824, ", false],
+          ["La Ravie", true],
+          [", Marguerite de Restif", false],
+        ],
+        [
+          ["1824, ", false],
+          [
+            "« Les chagrinades métaphysiques de Mademoiselle de Restif ou le Féminin en Berne » de Amaury Lièvremont in L’Inopportun Satyrique",
+            true,
+          ],
+        ],
+        [
+          ["1830, ", false],
+          ["revue de presse", true],
+        ],
+        [
+          ["1830, ", false],
+          ["L’Epousée", true],
+          [", Célestine Vogue", false],
+        ],
+        [
+          ["1830, ", false],
+          ["Vénéneuse", true],
+          [", Marguerite de Restif", false],
+        ],
+        [
+          ["1830, ", false],
+          ["Charmilles", true],
+          [", Madelon Deloire", false],
+        ],
+        [
+          ["1830, ", false],
+          ["Lavinia", true],
+          [", George Sand", false],
+        ],
+        [
+          ["1831, ", false],
+          ["Des duels de notre siècle", true],
+          [
+            ", ou de l'influence néfaste de la virile vengeance sur les cénaclières lesbiennes de Paris, Solomonea Calendula, préfacé par V. H.",
+            false,
+          ],
+        ],
+        [
+          ["1850, ", false],
+          ["Rêver de Babel", true],
+          [", Jeannette Sou", false],
+        ],
+        [
+          ["1855, ", false],
+          ["Trop de trèfle", true],
+          [", Sara Fidelio", false],
+        ],
+        [
+          ["1857, ", false],
+          ["Trois feuilles", true],
+          [", Sara Fidelio", false],
+        ],
+        [
+          ["1870, ", false],
+          ["Vastes clairières", true],
+          [", Sara Fidelio", false],
+        ],
+        [
+          ["1887, ", false],
+          ["Coffrets de joyaux", true],
+          [", Céleste Dusantal", false],
+        ],
+        [
+          ["1914, ", false],
+          ["Le conte de la souris", true],
+          [", Wang Chi", false],
+        ],
+        [
+          ["1915, ", false],
+          ["Conte des Deux Vaches", true],
+          [", Eléna Moriel", false],
+        ],
+        [
+          ["1915, ", false],
+          ["Conte du boiteux", true],
+          [", Christine Mouron", false],
+        ],
+        [
+          ["1915, ", false],
+          ["Le conte du poulailler", true],
+          [", Juliette Nadeau", false],
+        ],
+        [
+          ["1916, ", false],
+          ["Conte du pommier", true],
+          [", Liliane Ancel", false],
+        ],
+        [
+          ["1917, ", false],
+          ["Le Conte de la Grange brûlée", true],
+          [", Reveka Iliescu", false],
+        ],
+        [
+          ["1917, ", false],
+          ["L’autour", true],
+          [", Eléna Moriel", false],
+        ],
+        [
+          ["1925, ", false],
+          ["Clandestines", true],
+          [", Eléna Moriel", false],
+        ],
+        [
+          ["1929, ", false],
+          [
+            "« Préface à la réédition de Vastes clairières de Sara Fidelio » in La poésie féminine du XIXe siècle",
+            true,
+          ],
+          [", Hanno Winkelhock", false],
+        ],
+        [
+          ["1932, ", false],
+          ["Fragments testamentaires", true],
+          [", Eléna Moriel", false],
+        ],
+        [
+          ["1932, ", false],
+          ["Mon âme comme à la guerre", true],
+          [", Tatiana Reinfold", false],
+        ],
+        [
+          ["1968, ", false],
+          ["Zanzibar", true],
+          [", Judith Votler", false],
+        ],
+        [
+          ["1972, ", false],
+          ["Issues des profondeurs", true],
+          [", Giselle Passerrelle", false],
+        ],
+        [
+          ["1976, ", false],
+          ["Lire par les fleurs", true],
+          [", Maximilienne de Sarrazy", false],
+        ],
+        [
+          ["1980, ", false],
+          ["La Ravie", true],
+          [
+            ", Marguerite de Restif, réédition établie par Maximilienne de Sarrazy",
+            false,
+          ],
+        ],
+        [
+          ["2015, ", false],
+          ["Cénaclières", true],
+          [", Ito Shimaz", false],
+        ],
+        [
+          ["2019, ", false],
+          ["Ma vie sur les quais", true],
+          [", Magdalena S.", false],
+        ],
+        [
+          ["2034, ", false],
+          ["Sfumato", true],
+          [", Elena Ferris", false],
+        ],
+        [
+          ["2037, ", false],
+          ["Rêver de Babel", true],
+          [", Jeannette Sou, réédition", false],
+        ],
+        [
+          ["2039, ", false],
+          ["Au revers de l’histoire littéraire", true],
+          [", Ito Shimaz", false],
+        ],
+        [
+          ["2042, ", false],
+          ["Kamiya qu'on brûla vive", true],
+          [", Mawatari Sayoko", false],
+        ],
+        [
+          ["2043, ", false],
+          ["Imaginer Kamiya", true],
+          [", Clara de Brûme", false],
+        ],
+        [
+          ["2045, ", false],
+          ["Épreuves et brouillons : la préparation de « Zanzibar »", true],
+          [", 1952-1967, Judith Votler, édition établie par Nomelia", false],
+        ],
+        [
+          ["2052, ", false],
+          [
+            "Piste audio de la communication de Nomelia (dir. Ito Shimaz) lors du colloque de l’université printanière du manoir du Coëtlosquet",
+            true,
+          ],
+        ],
+        [
+          ["2052, ", false],
+          ["Le petit livre de conseils à mes sœurs du RPT parisien", true],
+          [", Albertine du Coëtlosquet", false],
+        ],
+        [
+          ["2053, ", false],
+          [
+            "Espace-espace-temps – Poésie et méta-poésie dans l’œuvre de Judith Votler",
+            true,
+          ],
+          [", Nomelia", false],
+        ],
+        [
+          ["2053, ", false],
+          [
+            "Veillées distantes. La correspondance des Salonnières de Sonniers-en-Belons (1914-1949)",
+            true,
+          ],
+          [", édition établie par Ito Shimaz et Nomelia", false],
+        ],
+        [
+          ["2056, ", false],
+          ["L’incendie. Le secret des Salonnières", true],
+          [", vidéo des Phallokrites, Winkelhock & co", false],
+        ],
+        [
+          ["2061, ", false],
+          ["Annonce – lecture publique des textes de Septimea Calendula", true],
+          [", International Feminist Cenacle", false],
+        ],
+        [
+          ["2068, ", false],
+          ["Manifeste Tokyoïte de New-York", true],
+          [", Collectif, Réseau NWC", false],
+        ],
+        [
+          ["2068, ", false],
+          ["Journal", true],
+          [", Rachidatou Assou", false],
+        ],
+        [
+          ["2068, ", false],
+          ["Étude des mauvaises filles de l’orme de Central Park", true],
+          [", Delila Hill", false],
+        ],
+        [
+          ["2082, ", false],
+          ["Elles étaient de la modernité passive", true],
+          [", Sbérénice Long", false],
+        ],
+        [
+          ["2086, ", false],
+          ["Retour à Tokyo", true],
+          [", Kanno Asa", false],
+        ],
+        [
+          ["2087, ", false],
+          ["Es sol sobre nieve", true],
+          [", Ndolo Kanyinda", false],
+        ],
+        [
+          ["2088, ", false],
+          ["Oraison pour Maria", true],
+          [", Sonia Hill", false],
+        ],
+        [
+          ["2088, ", false],
+          ["Autre oraison pour Maria", true],
+          [", Sonia Hill", false],
+        ],
+        [
+          ["2097, ", false],
+          ["133", true],
+          [", Sonia Hill", false],
+        ],
+        [
+          ["2101, ", false],
+          ["Histoire des Cénaclières Internationales (2035-2097)", true],
+          [", Andrea Josto-Valod", false],
+        ],
+        [
+          ["2175, ", false],
+          [
+            "Bibliographie Universelle de la Littérature Française Mâle du XXIIe siècle",
+            true,
+          ],
+          [", Pseudo Félicité de Genlis", false],
+        ],
+        [
+          ["2230, ", false],
+          [
+            "« Oraison funèbre prononcée par Sonia Hill lors de la cérémonie funèbre de Maria Dos Sueño morte le mardi 11 septembre 2068 » in Ce que Maria Dos Sueño était et est encore",
+            true,
+          ],
+          [", Vrio Danali VI", false],
+        ],
+        [
+          ["2431, ", false],
+          ["Broderie n°370", true],
+          [", Fukuda Taya (avant les rats)", false],
+        ],
+        [
+          ["2431, ", false],
+          ["Broderie n°370", true],
+          [", Okabe Chiyo (après les rats)", false],
+        ],
+        [
+          ["2431, ", false],
+          ["Broderie n°423", true],
+          [", Fukuda Taya (après les rats)", false],
+        ],
+        [
+          ["2431, ", false],
+          ["Broderie n°423", true],
+          [", Okabe Chiyo (avant les rats)", false],
+        ],
+        [
+          ["2433, ", false],
+          ["Quinzième carbone – Première partie : Nouvelle soif", true],
+          [", Nakamura Kozue", false],
+        ],
+        [
+          ["2433, ", false],
+          ["Et autres poèmes", true],
+          [", Clara Bruun", false],
+        ],
+        [
+          ["2434, ", false],
+          ["Mes avalées", true],
+          [", Sigista Loy", false],
+        ],
+        [
+          ["2435, ", false],
+          ["Rêver de Babel", true],
+          [", Jeannette Sou, réédition vidéopoétique", false],
+        ],
+        [
+          ["2437, ", false],
+          ["Odonomo VI", true],
+          [", Minelli Stonk", false],
+        ],
+        [
+          ["2443, ", false],
+          ["Regarder le temps qu'il fait", true],
+          [", Clara Bruun", false],
+        ],
+        [
+          ["2443, ", false],
+          ["Mes Emportées", true],
+          [", Margit Attaway & Sigista Loy", false],
+        ],
+        [
+          ["2450, ", false],
+          ["Nous brodions", true],
+          [", Umeda Iho et Domen Reiko", false],
+        ],
+        [
+          ["2451, ", false],
+          ["Quinzième Carbone – Première partie : Umareru", true],
+          [", Nakamura Kozue", false],
+        ],
+        [
+          ["2453, ", false],
+          [
+            "Quinzième Carbone – Deuxième partie : La Guerre des Cerisiers",
+            true,
+          ],
+          [", Nakamura Kozue", false],
+        ],
+        [
+          ["2454, ", false],
+          ["Nuinal", true],
+          [", Svenista Olëi", false],
+        ],
+        [
+          ["2465, ", false],
+          ["Théorie de l’arché-musique", true],
+          [", Iha Orimi", false],
+        ],
+        [
+          ["2466, ", false],
+          ["Journaux", true],
+          [", Iha Orimi", false],
+        ],
+        [
+          ["2467, ", false],
+          ["Prunus serrulata", true],
+          [", Pseudo Minelli Stonk", false],
+        ],
+        [
+          ["2478, ", false],
+          ["Kozue – génération du deuil", true],
+          [", Ono Seida", false],
+        ],
+        [
+          ["2486, ", false],
+          ["Journal", true],
+          [", Umeda Iho", false],
+        ],
+        [
+          ["2504, ", false],
+          ["Le Portail – où sont nos textes", true],
+          [", Xx-Sappho-xX", false],
+        ],
+        [
+          ["2504, ", false],
+          ["Pink Nor Fa", true],
+          [", Ultra-Pink-Poetry", false],
+        ],
+        [
+          ["2505, ", false],
+          ["Blog de Lolli Attaway", true],
+        ],
+        [
+          ["2505, ", false],
+          ["Blog de Malignette Superzon", true],
+        ],
+        [
+          ["2505, ", false],
+          ["Blog de vA-ike-rA-A-m-044", true],
+        ],
+        [
+          ["2555, ", false],
+          ["Journal", true],
+          [", Taos Mansour", false],
+        ],
+        [
+          ["2578, ", false],
+          [
+            "Le Cordon Chryséléphantine – Chap. 56 : Grande Replantation Mondiale",
+            true,
+          ],
+          [", Taos Mansour", false],
+        ],
+        [
+          ["2732, ", false],
+          [
+            "La Reformulation – tentative de digestion d’une information trop lourde à digérer",
+            true,
+          ],
+          [", Nor Do", false],
+        ],
+        [
+          ["2735, ", false],
+          ["analysis session", true],
+          [", Cedroc Harp Do", false],
+        ],
+        [
+          ["2878, ", false],
+          ["Les lettres de Clara de Brûme", true],
+          [", édition critique de 2878", false],
+        ],
+        [
+          ["2888, ", false],
+          ["Histoires de Zonzon-LAMALIGNE et de ses sœurs", true],
+          [", X-Gilberte-X et Lolli_Attaway, Rimini Leocadia", false],
+        ],
+        [
+          ["2998, ", false],
+          [
+            "Le Soir des Magiciennes – pyramidologie des cénaclières depuis les Salonnières jusqu’au Cénacle Hypertextuel des Poétesses Tokyoïtes du Septième Réseau",
+            true,
+          ],
+          [", Zainabou Numpuby", false],
+        ],
+        [
+          ["3002, ", false],
+          ["Encyclopédie Cénaclière Universelle", true],
+          [", Collectif de Svalbard", false],
+        ],
+      ];
+
+      let ligneIndex = 0;
+
+      function typeWriterLine() {
+        if (ligneIndex >= lignes.length) return;
+
+        const line = lignes[ligneIndex];
+        const para = document.createElement("p");
+        const span = document.createElement("span");
+        const cursor = document.createElement("span");
+        cursor.classList.add("cursor");
+        para.appendChild(span);
+        para.appendChild(cursor);
+        document.getElementById("list").appendChild(para);
+
+        let fragIndex = 0,
+          charIndex = 0;
+
+        function typeChar() {
+          if (fragIndex >= line.length) {
+            para.removeChild(cursor);
+            ligneIndex++;
+            setTimeout(typeWriterLine, 800); // Pause avant prochaine ligne
+            return;
+          }
+
+          const [text, italic] = line[fragIndex];
+          const target = document.createElement(italic ? "i" : "span");
+          span.appendChild(target);
+
+          function typeLetter() {
+            if (charIndex < text.length) {
+              target.innerHTML += text.charAt(charIndex);
+              charIndex++;
+              setTimeout(typeLetter, 40); // vitesse de frappe par lettre
+            } else {
+              fragIndex++;
+              charIndex = 0;
+              typeChar();
+            }
+          }
+
+          typeLetter();
+        }
+
+        typeChar();
+      }
+
+      window.onload = typeWriterLine;
+    </script>
+  </body>
+</html>
